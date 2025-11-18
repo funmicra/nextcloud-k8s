@@ -1,0 +1,27 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: nextcloud
+spec:
+  selector:
+    app: nextcloud
+  ports:
+    - protocol: TCP
+      port: 443
+      targetPort: 443
+  type: LoadBalancer
+  loadBalancerIP: 192.168.88.74  # From your MetalLB pool
+
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: mariadb
+spec:
+  selector:
+    app: mariadb
+  ports:
+    - protocol: TCP
+      port: 3306
+      targetPort: 3306
+  clusterIP: None  # Headless service for DB

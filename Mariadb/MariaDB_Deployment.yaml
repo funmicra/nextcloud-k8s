@@ -1,0 +1,52 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: nextcloud-mariadb
+  labels:
+    app: mariadb
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: mariadb
+  template:
+    metadata:
+      labels:
+        app: mariadb
+    spec:
+      containers:
+        - name: mariadb
+          image: lscr.io/linuxserver/mariadb:latest
+          env:
+            - name: PUID
+              value: "1000"
+            - name: PGID
+              value: "1000"
+            - name: TZ
+              value: "Europe/Athens"
+            - name: MYSQL_ROOT_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: nextcloud-secrets
+                  key: MYSQL_ROOT_PASSWORD
+            - name: MYSQL_DATABASE
+              value: "nextcloud"
+            - name: MYSQL_USER
+              value: "nextcloud"
+            - name: MYSQL_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: nextcloud-secrets
+                  key: MYSQL_PASSWORD
+          volumeMounts:
+            - mountPath: /config
+              name: mariadb-config
+            - mountPath: /data
+              name: mariadb-data
+      volumes:
+        - name: mariadb-config
+          persistentVolumeClaim:
+            claimName: mariadb-config-pvc
+        - name: mariadb-data
+          persistentVolumeClaim:
+            claimName: mariadb-data-pvc
