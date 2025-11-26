@@ -2,7 +2,7 @@
 ## Nextcloud on Kubernetes
 
 This repo contains the Kubernetes manifests needed to run Nextcloud and MariaDB.
-Persistent data is stored on an NFS server.
+Persistent data is stored on an NFS server. **Passwords have been changed of course**.
 
 **Storage**
 
